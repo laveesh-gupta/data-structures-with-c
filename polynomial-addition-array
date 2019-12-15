@@ -1,2 +1,95 @@
-#include<stdio.h>  
-#include<stdlib.h>  
+#include<stdio.h>
+#include<stdlib.h>
+#define COMPARE(x,y) (((x)>(y))?1:(((x)==(y))?0:-1))
+typedef struct{
+	float coef;
+	int exp;
+}polynomial;
+polynomial terms[100];
+int avail=0,startc,finishc;
+void attach(float c,int e)
+{
+	if(avail>=100)
+	{
+		printf("Memory full\n");
+		exit(1);
+	}
+	terms[avail].coef=c;
+	terms[avail].exp=e;
+	avail++;
+}
+void print()
+{
+	int i;
+	for(i=startc;i<startc+1;i++)
+	{
+		printf("%fx^%d",terms[i].coef,terms[i].exp);
+	}
+	for(i=startc+1;i<=finishc;i++)
+	{
+		printf("+%fx^%d",terms[i].coef,terms[i].exp);
+	}
+	printf("\n");
+}
+void padd(int sa,int fa,int sb,int fb)
+{
+	startc=avail;
+	float sum;
+	while(sa<=fa && sb<=fb)
+	{
+		switch(COMPARE(terms[sa].exp,terms[sb].exp))
+		{
+			case 1:	attach(terms[sa].coef,terms[sa].exp);
+				sa++;
+				break;
+			case 0:	sum=terms[sa].coef+terms[sb].coef;
+				if(sum)
+					attach(sum,terms[sa].exp);
+				sa++;
+				sb++;
+				break;
+			case -1:attach(terms[sb].coef,terms[sb].exp);
+				sb++;
+				break;
+		}
+	}
+	for(;sa<=fa;sa++)
+	{
+		attach(terms[sa].coef,terms[sa].exp);
+		sa++;
+	}
+	for(;sb<=fb;sb++)
+	{
+		attach(terms[sb].coef,terms[sb].exp);
+		sb++;
+	}
+	finishc=avail-1;
+	print();
+}
+void main()
+{
+	int counta,countb,i,starta,finisha,startb,finishb,e;
+	float c;
+	printf("How many terms in first polynomial?\n");
+	scanf("%d",&counta);
+	printf("Enter coefficients and exponents of first polynomial\n");
+	starta=avail;
+	for(i=0;i<counta;i++)
+	{
+		scanf("%f%d",&c,&e);
+		attach(c,e);
+	}
+	finisha=avail-1;
+	startb=avail;
+	printf("How many terms in second polynomial?\n");
+	scanf("%d",&countb);
+	printf("Enter coefficients and exponents of second polynomial\n");
+	for(i=0;i<countb;i++)
+	{
+		scanf("%f%d",&c,&e);
+		attach(c,e);
+	}
+	finishb=avail-1;
+	printf("Addition of these two polynomials is\n");
+	padd(starta,finisha,startb,finishb);
+}
