@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct{
+	int key;
+}element;
+struct queue{
+	element data;
+	struct queue *link;
+};
+typedef struct queue *queuepointer;
+queuepointer front[10],rear[10];
+void push(element item,int i)
+{
+	queuepointer temp;
+	temp=(queuepointer)malloc(sizeof(struct queue));
+	temp->data=item;
+	if(front[i])
+		rear[i]->link=temp;
+	else
+		front[i]=temp;
+	rear[i]=temp;
+	rear[i]->link=NULL;
+}
+element pop(int i)
+{
+	queuepointer temp=front[i];
+	element item;
+	if(!temp)
+	{
+		item.key=-1;
+		return item;
+	}
+	else
+	{
+		item=front[i]->data;
+		front[i]=front[i]->link;
+	}
+	free(temp);
+	return item;
+}
+void display(int i)
+{
+	queuepointer temp;
+	temp=front[i];
+	if(!temp)
+	{
+		printf("Queue is empty\n");
+		return;
+	}
+	printf("Elements in queue %d is/are\n",i);
+	for(;temp;temp=temp->link)
+		printf("%d\t",temp->data.key);
+	printf("\n");
+}
+void main()
+{
+	int choice,i;
+	element item;
+	while(1)
+	{
+		printf("Select any operation\n1. Insert\n2. Delete\n3. Display\n4. Exit\n");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1:	printf("Enter the queue number\n");
+				scanf("%d",&i);
+				printf("Enter the element\n");
+				scanf("%d",&item.key);
+				push(item,i);
+				break;
+			case 2:	printf("Enter the queue number\n");
+				scanf("%d",&i);
+				item=pop(i);
+				if(item.key==-1)
+					printf("Queue is empty\n");
+				else
+					printf("Element deleted is %d\n",item.key);
+				break;
+			case 3:	printf("Enter the queue number\n");
+				scanf("%d",&i);
+				display(i);
+				break;
+			case 4: exit(1);
+			default:printf("Invalid choice\n");
+		}
+	}
+}
