@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct{
+	int key;
+}element;
+element *queue;
+int front=0,rear=0,size=2;
+void copy(element *start,element *end,element *nq)
+{
+	while(start!=end)
+	{
+		*nq=*start;
+		nq++;
+		start++;
+	}
+}
+void queuefull()
+{
+	element *nq;
+	nq=(element*)malloc(2*size*sizeof(element));
+	int start=(front+1)%size;
+	if(start<2)
+	{
+		copy(queue+start,queue+start+size-1,nq);
+	}
+	else
+	{
+		copy(queue+start,queue+size,nq);
+		copy(queue,queue+rear+1,nq-size+start);
+	}
+	front=2*size-1;
+	rear=size-2;
+	size=size*2;
+	free(queue);
+	queue=nq;
+}
+void addq(element item)
+{
+	rear=(rear+1)%size;
+	if(front==rear)
+	{
+		queuefull();
+		rear=(rear+1)%size;
+	}
+	queue[rear]=item;
+}
+element delq()
+{
+	element item;
+	if(front==rear)
+	{
+		item.key=-1;
+		return item;
+	}
+	front=(front+1)%size;
+	return queue[front];
+}
+void display()
+{
+	int i;
+	if(front==rear)
+	{
+		printf("The queue is empty\n");
+	}
+	else
+	{
+		for(i=(front+1)%size;i!=rear;i=(i+1)%size)
+		{
+			printf("%d\t",queue[i].key);
+		}
+		printf("%d\n",queue[i].key);
+	}
+}
+void main()
+{
+	queue=(element*)malloc(size*sizeof(element));
+	int choice,value;
+	element item;
+	while(1)
+	{
+		printf("Select any operation\n1. Insert\n2. Delete\n3. Display\n4. Exit\n");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1:	printf("Enter the value\n");
+				scanf("%d",&value);
+				item.key=value;
+				addq(item);
+				break;
+			case 2:	item=delq();
+				if(item.key==-1)
+				{
+					printf("The queue is empty\n");
+					break;
+				}
+				printf("Deleted element is %d\n",item.key);
+				break;
+			case 3:	display();
+				break;
+			case 4:	exit(1);
+			default:printf("Invalid choice\n");
+		}
+	}
+}
