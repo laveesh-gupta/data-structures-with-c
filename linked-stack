@@ -1,0 +1,83 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct{
+	int key;
+}element;
+struct stack{
+	element data;
+	struct stack *link;
+};
+typedef struct stack *stackpointer;
+stackpointer top[10];
+void push(element item,int i)
+{
+	stackpointer temp;
+	temp=(stackpointer)malloc(sizeof(struct stack));
+	temp->data=item;
+	temp->link=top[i];
+	top[i]=temp;
+}
+element pop(int i)
+{
+	stackpointer temp=top[i];
+	element item;
+	if(!temp)
+	{
+		item.key=-1;
+		return item;
+	}
+	else
+	{
+		item=top[i]->data;
+		top[i]=top[i]->link;
+	}
+	free(temp);
+	return item;
+}
+void display(int i)
+{
+	stackpointer temp;
+	temp=top[i];
+	if(!temp)
+	{
+		printf("Stack is empty\n");
+		return;
+	}
+	printf("Elements in stack %d is/are\n",i);
+	for(;temp;temp=temp->link)
+		printf("%d\t",temp->data.key);
+	printf("\n");
+}
+void main()
+{
+	int choice,i;
+	element item;
+	while(1)
+	{
+		printf("Select any operation\n1. Insert\n2. Delete\n3. Display\n4. Exit\n");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1:	printf("Enter the stack number\n");
+				scanf("%d",&i);
+				printf("Enter the element\n");
+				scanf("%d",&item.key);
+				push(item,i);
+				break;
+			case 2:	printf("Enter the stack number\n");
+				scanf("%d",&i);
+				item=pop(i);
+				if(item.key==-1)
+					printf("Stack is empty\n");
+				else
+					printf("Element deleted is %d\n",item.key);
+				break;
+			case 3:	printf("Enter the stack number\n");
+				scanf("%d",&i);
+				display(i);
+				break;
+			case 4: exit(1);
+			default:printf("Invalid choice\n");
+		}
+	}
+}
