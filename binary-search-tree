@@ -1,0 +1,77 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+	int data;
+	struct node *llink;
+	struct node *rlink;
+};
+typedef struct node *treeptr;
+void insert(treeptr *root,int d)
+{
+	if((*root)==NULL)
+	{
+		*root=(treeptr)malloc(sizeof(struct node));
+		(*root)->data=d;
+		(*root)->llink=NULL;
+		(*root)->rlink=NULL;
+		return;
+	}
+	else
+	{
+		if(d<((*root)->data))
+			insert(&((*root)->llink),d);
+		else if(d>((*root)->data))
+			insert(&((*root)->rlink),d);
+	}
+}
+void search(treeptr root,int d)
+{
+	if(root==NULL)
+		printf("Element not found\n");
+	else if(root->data==d)
+	{
+		printf("Element found\n");
+		return;
+	}
+	else if(d<(root->data))
+		search(root->llink,d);
+	else if(d>(root->data))
+		search(root->rlink,d);
+}
+void inorder(treeptr root)
+{
+	if(root)
+	{
+		inorder(root->llink);
+		printf("%d\t",root->data);
+		inorder(root->rlink);
+	}
+}
+void main()
+{
+	treeptr root;
+	root=NULL;
+	int d,choice;
+	while(1)
+	{
+		printf("Select any operation\n1. Insert\n2. Search\n3. Inorder Traversal\n4. Exit\n");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1:	printf("Enter the element\n");
+				scanf("%d",&d);
+				insert(&root,d);
+				break;
+			case 2:	printf("Enter the element to be searched\n");
+				scanf("%d",&d);
+				search(root,d);
+				break;
+			case 3:	inorder(root);
+				printf("\n");
+				break;
+			case 4:	exit(1);
+				break;
+			default:printf("Invalid choice\n");
+		}
+	}
+}
