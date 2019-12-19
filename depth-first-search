@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct node{
+	int vertex;
+	struct node *link;
+}node;
+node *g[20];
+int visited[20];
+int n;
+void insert(int vi,int vj)
+{
+	node *p,*q;
+	q=(node*)malloc(sizeof(struct node));
+	q->vertex=vj;
+	q->link=NULL;
+	if(g[vi]==NULL)
+		g[vi]=q;
+	else
+	{
+		for(p=g[vi];p->link!=NULL;p=p->link);
+		p->link=q;
+	}
+}
+void dfs(int i)
+{
+	node *p;
+	printf("%d\n",i);
+	visited[i]=1;
+	for(p=g[i];p!=NULL;p=p->link)
+	{
+		i=p->vertex;
+		if(!visited[i])
+		{	
+			dfs(i);
+		}
+	}
+}
+void main()
+{
+	int i,e,vi,vj;
+	printf("Enter number of vertices\n");
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+		g[i]=NULL;
+	for(i=0;i<n;i++)
+		visited[i]=0;
+	printf("Enter number of edges\n");
+	scanf("%d",&e);
+	for(i=0;i<e;i++)
+	{
+		printf("Enter the edge u,v\n");
+		scanf("%d%d",&vi,&vj);
+		insert(vi,vj);
+	}
+	printf("DFS traversal is\n");
+	dfs(0);
+}
